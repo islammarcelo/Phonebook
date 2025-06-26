@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/phonebook
+    tomcat:
+      initSQL: SET NAMES 'utf8_general_ci'
+    username: postgres
+    password: Admin@123
+  liquibase:
+    change-log: classpath:db/changelog/changelog-default.sql
+    enabled: true
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
