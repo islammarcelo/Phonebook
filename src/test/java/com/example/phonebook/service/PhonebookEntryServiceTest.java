@@ -1,5 +1,7 @@
 package com.example.phonebook.service;
 
+import com.example.phonebook.elasticsearch.PhonebookEntryDocument;
+import com.example.phonebook.elasticsearch.PhonebookEntrySearchRepository;
 import com.example.phonebook.entity.PhonebookEntry;
 import com.example.phonebook.repository.PhonebookEntryRepository;
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,9 @@ class PhonebookEntryServiceTest {
     @Mock
     private PhonebookEntryRepository repository;
 
+    @Mock
+    private PhonebookEntrySearchRepository searchRepository;
+
     @InjectMocks
     private PhonebookEntryService service;
 
@@ -32,10 +37,18 @@ class PhonebookEntryServiceTest {
     @Test
     void testCreateEntry() {
         PhonebookEntry entry = new PhonebookEntry(null, "12345678", "Alice");
-        when(repository.save(entry)).thenReturn(new PhonebookEntry(1L, "12345678", "Alice"));
-        PhonebookEntry saved = service.createEntry(entry);
-        assertEquals("Alice", saved.getName());
-        assertEquals("12345678", saved.getPhone());
+        PhonebookEntry saved = new PhonebookEntry(1L, "12345678", "Alice");
+        PhonebookEntryDocument document = new PhonebookEntryDocument("1", "12345678", "Alice");
+
+        when(repository.save(entry)).thenReturn(saved);
+        when(searchRepository.save(any(PhonebookEntryDocument.class))).thenReturn(document);
+
+        PhonebookEntry result = service.createEntry(entry);
+
+        assertEquals("Alice", result.getName());
+        assertEquals("12345678", result.getPhone());
+        verify(repository).save(entry);
+        verify(searchRepository).save(any(PhonebookEntryDocument.class));
     }
 
     @Test
@@ -69,15 +82,25 @@ class PhonebookEntryServiceTest {
     @Test
     void testUpdateEntry() {
         PhonebookEntry entry = new PhonebookEntry(1L, "12345678", "Alice");
+        PhonebookEntryDocument document = new PhonebookEntryDocument("1", "12345678", "Alice");
+
         when(repository.save(entry)).thenReturn(entry);
+        when(searchRepository.save(any(PhonebookEntryDocument.class))).thenReturn(document);
+
         PhonebookEntry updated = service.updateEntry(1L, entry);
         assertEquals(1L, updated.getId());
+        verify(repository).save(entry);
+        verify(searchRepository).save(any(PhonebookEntryDocument.class));
     }
 
     @Test
     void testDeleteEntry() {
         doNothing().when(repository).deleteById(1L);
+        doNothing().when(searchRepository).deleteById("1");
+
         service.deleteEntry(1L);
-        verify(repository, times(1)).deleteById(1L);
+
+        verify(repository).deleteById(1L);
+        verify(searchRepository).deleteById("1");
     }
 }
