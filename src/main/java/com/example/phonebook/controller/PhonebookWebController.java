@@ -1,5 +1,7 @@
 package com.example.phonebook.controller;
 
+import com.example.phonebook.elasticsearch.PhonebookEntryDocument;
+import com.example.phonebook.elasticsearch.PhonebookEntrySearchService;
 import com.example.phonebook.entity.PhonebookEntry;
 import com.example.phonebook.service.PhonebookEntryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +18,28 @@ public class PhonebookWebController {
     @Autowired
     private PhonebookEntryService service;
 
+    @Autowired
+    private PhonebookEntrySearchService phonebookEntrySearchService;
+
     @GetMapping
     public String listEntries(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
+            @RequestParam(required = false) String keyword,
             Model model) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<PhonebookEntry> entryPage = service.getAllEntries(pageable);
-        model.addAttribute("entryPage", entryPage);
+        if (keyword != null && !keyword.isEmpty()) {
+            Page<PhonebookEntryDocument> entryPage = phonebookEntrySearchService.searchByNameOrPhone(keyword, page,
+                    size);
+            model.addAttribute("entryPage", entryPage);
+        } else {
+            Page<PhonebookEntry> entryPage = service.getAllEntries(pageable);
+            model.addAttribute("entryPage", entryPage);
+        }
         model.addAttribute("currentPage", page);
         model.addAttribute("pageSize", size);
+        model.addAttribute("keyword", keyword);
+
         return "phonebook_list";
     }
 
