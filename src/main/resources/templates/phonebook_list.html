@@ -8,6 +8,22 @@
 <div class="container mt-4">
     <h2>Phonebook</h2>
     <a class="btn btn-primary mb-3" th:href="@{/phonebook/new}">Add New</a>
+    
+    <form class="row mb-3" method="get" th:action="@{/phonebook}">
+        <div class="col-auto">
+            <input type="text" class="form-control" name="keyword" placeholder="Search by name or phone" th:value="${keyword}">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-secondary">Search</button>
+        </div>
+
+        <div class="col-auto" th:if="${keyword}">
+            <a class="btn btn-outline-secondary" th:href="@{/phonebook}">Clear</a>
+        </div>
+    </form>
+
+
+
     <table class="table table-bordered">
         <thead>
         <tr>
@@ -32,14 +48,17 @@
     <nav>
         <ul class="pagination">
             <li class="page-item" th:classappend="${entryPage.first} ? 'disabled'">
-                <a class="page-link" th:href="@{/phonebook(page=${currentPage - 1},size=${pageSize})}">Previous</a>
+                <a class="page-link"
+                    th:href="@{/phonebook(page=${currentPage - 1},size=${pageSize},keyword=${keyword})}">Previous</a>
             </li>
             <li class="page-item" th:each="i : ${#numbers.sequence(0, entryPage.totalPages - 1)}"
                 th:classappend="${i == currentPage} ? 'active'">
-                <a class="page-link" th:href="@{/phonebook(page=${i},size=${pageSize})}" th:text="${i + 1}"></a>
+                <a class="page-link"
+                th:href="@{/phonebook(page=${i},size=${pageSize},keyword=${keyword})}" th:text="${i + 1}"></a>
             </li>
             <li class="page-item" th:classappend="${entryPage.last} ? 'disabled'">
-                <a class="page-link" th:href="@{/phonebook(page=${currentPage + 1},size=${pageSize})}">Next</a>
+                <a class="page-link"
+                    th:href="@{/phonebook(page=${currentPage + 1},size=${pageSize},keyword=${keyword})}">Next</a>
             </li>
         </ul>
     </nav>
