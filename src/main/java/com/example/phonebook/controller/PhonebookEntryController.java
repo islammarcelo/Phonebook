@@ -2,6 +2,7 @@ package com.example.phonebook.controller;
 
 import com.example.phonebook.entity.PhonebookEntry;
 import com.example.phonebook.service.PhonebookEntryService;
+import com.example.phonebook.util.InputSanitizer;
 
 import jakarta.validation.Valid;
 
@@ -17,9 +18,25 @@ public class PhonebookEntryController {
     @Autowired
     private PhonebookEntryService service;
 
+    @Autowired
+    private InputSanitizer sanitizer;
+
     @PostMapping
-    public ResponseEntity<PhonebookEntry> createEntry(@Valid @RequestBody PhonebookEntry entry) {
-        return ResponseEntity.ok(service.createEntry(entry));
+    public ResponseEntity<?> createEntry(@Valid @RequestBody PhonebookEntry entry) {
+        try {
+            // Sanitize entry data
+            if (entry.getName() != null) {
+                entry.setName(sanitizer.sanitizeName(entry.getName()));
+            }
+            if (entry.getPhone() != null) {
+                entry.setPhone(sanitizer.sanitizePhone(entry.getPhone()));
+            }
+
+            PhonebookEntry saved = service.createEntry(entry);
+            return ResponseEntity.ok(saved);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Validation error: " + e.getMessage());
+        }
     }
 
     @GetMapping
@@ -28,26 +45,66 @@ public class PhonebookEntryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PhonebookEntry> getEntryById(@PathVariable Long id) {
-        return service.getEntryById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<PhonebookEntry> getEntryById(@PathVariable String id) {
+        try {
+            Long sanitizedId = sanitizer.sanitizeLong(id);
+            if (sanitizedId == null) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            return service.getEntryById(sanitizedId)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PhonebookEntry> updateEntry(@PathVariable Long id, @Valid @RequestBody PhonebookEntry entry) {
-        if (!service.getEntryById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> updateEntry(@PathVariable String id, @Valid @RequestBody PhonebookEntry entry) {
+        try {
+            Long sanitizedId = sanitizer.sanitizeLong(id);
+            if (sanitizedId == null) {
+                return ResponseEntity.badRequest().body("Invalid entry ID");
+            }
+
+            if (!service.getEntryById(sanitizedId).isPresent()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // Sanitize entry data
+            if (entry.getName() != null) {
+                entry.setName(sanitizer.sanitizeName(entry.getName()));
+            }
+            if (entry.getPhone() != null) {
+                entry.setPhone(sanitizer.sanitizePhone(entry.getPhone()));
+            }
+
+            PhonebookEntry updated = service.updateEntry(sanitizedId, entry);
+            return ResponseEntity.ok(updated);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Validation error: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Invalid entry ID");
         }
-        return ResponseEntity.ok(service.updateEntry(id, entry));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEntry(@PathVariable Long id) {
-        if (!service.getEntryById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> deleteEntry(@PathVariable String id) {
+        try {
+            Long sanitizedId = sanitizer.sanitizeLong(id);
+            if (sanitizedId == null) {
+                return ResponseEntity.badRequest().body("Invalid entry ID");
+            }
+
+            if (!service.getEntryById(sanitizedId).isPresent()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            service.deleteEntry(sanitizedId);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Invalid entry ID");
         }
-        service.deleteEntry(id);
-        return ResponseEntity.noContent().build();
     }
 }
