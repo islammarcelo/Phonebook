@@ -2,6 +2,7 @@ package com.example.phonebook.controller;
 
 import com.example.phonebook.entity.PhonebookEntry;
 import com.example.phonebook.service.PhonebookEntryService;
+import com.example.phonebook.util.InputSanitizer;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +30,16 @@ class PhonebookEntryControllerTest {
         @MockBean
         private PhonebookEntryService service;
 
+        @MockBean
+        private InputSanitizer sanitizer;
+
         @Test
         void testCreateEntry() throws Exception {
                 PhonebookEntry entry = new PhonebookEntry(null, "12345678", "Alice");
                 PhonebookEntry saved = new PhonebookEntry(1L, "12345678", "Alice");
                 when(service.createEntry(any(PhonebookEntry.class))).thenReturn(saved);
+                when(sanitizer.sanitizeName("Alice")).thenReturn("Alice");
+                when(sanitizer.sanitizePhone("12345678")).thenReturn("12345678");
 
                 mockMvc.perform(post("/api/phonebook")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -56,6 +62,7 @@ class PhonebookEntryControllerTest {
         @Test
         void testGetEntryById() throws Exception {
                 when(service.getEntryById(1L)).thenReturn(Optional.of(new PhonebookEntry(1L, "12345678", "Alice")));
+                when(sanitizer.sanitizeLong("1")).thenReturn(1L);
 
                 mockMvc.perform(get("/api/phonebook/1"))
                                 .andExpect(status().isOk())
@@ -67,6 +74,9 @@ class PhonebookEntryControllerTest {
                 when(service.getEntryById(1L)).thenReturn(Optional.of(new PhonebookEntry(1L, "12345678", "Alice")));
                 when(service.updateEntry(Mockito.eq(1L), any(PhonebookEntry.class)))
                                 .thenReturn(new PhonebookEntry(1L, "12345678", "Alice Updated"));
+                when(sanitizer.sanitizeLong("1")).thenReturn(1L);
+                when(sanitizer.sanitizeName("Alice Updated")).thenReturn("Alice Updated");
+                when(sanitizer.sanitizePhone("12345678")).thenReturn("12345678");
 
                 mockMvc.perform(put("/api/phonebook/1")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -78,6 +88,7 @@ class PhonebookEntryControllerTest {
         @Test
         void testDeleteEntry() throws Exception {
                 when(service.getEntryById(1L)).thenReturn(Optional.of(new PhonebookEntry(1L, "12345678", "Alice")));
+                when(sanitizer.sanitizeLong("1")).thenReturn(1L);
 
                 mockMvc.perform(delete("/api/phonebook/1"))
                                 .andExpect(status().isNoContent());

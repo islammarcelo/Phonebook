@@ -7,11 +7,26 @@
 <body>
 <div class="container mt-4">
     <h2>Phonebook</h2>
+    
+    <!-- Flash Messages -->
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    
     <a class="btn btn-primary mb-3" th:href="@{/phonebook/new}">Add New</a>
     
-    <form class="row mb-3" method="get" th:action="@{/phonebook}">
+    <form class="row mb-3" method="get" th:action="@{/phonebook}" onsubmit="return validateSearchForm()">
         <div class="col-auto">
-            <input type="text" class="form-control" name="keyword" placeholder="Search by name or phone" th:value="${keyword}">
+            <input type="text" class="form-control" name="keyword" id="searchKeyword" 
+                   placeholder="Search by name or phone" th:value="${keyword}"
+                   pattern="[a-zA-Z0-9\s\-']*"
+                   title="Only letters, numbers, spaces, hyphens, and apostrophes are allowed">
         </div>
         <div class="col-auto">
             <button type="submit" class="btn btn-secondary">Search</button>
@@ -21,8 +36,6 @@
             <a class="btn btn-outline-secondary" th:href="@{/phonebook}">Clear</a>
         </div>
     </form>
-
-
 
     <table class="table table-bordered">
         <thead>
@@ -39,29 +52,77 @@
                 <td>
                     <a th:href="@{'/phonebook/edit/' + ${entry.id}}" class="btn btn-warning btn-sm">Edit</a>
                     <a th:href="@{'/phonebook/delete/' + ${entry.id}}" class="btn btn-danger btn-sm"
-                       onclick="return confirm('Are you sure?')">Delete</a>
+                       onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a>
                 </td>
             </tr>
         </tbody>
     </table>
+    
     <!-- Pagination controls -->
-    <nav>
-        <ul class="pagination">
-            <li class="page-item" th:classappend="${entryPage.first} ? 'disabled'">
-                <a class="page-link"
-                    th:href="@{/phonebook(page=${currentPage - 1},size=${pageSize},keyword=${keyword})}">Previous</a>
+    <nav th:if="${entryPage.totalPages > 1}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                <a class="page-link" th:href="@{/phonebook(page=${currentPage - 1}, size=${pageSize}, keyword=${keyword})}">Previous</a>
             </li>
-            <li class="page-item" th:each="i : ${#numbers.sequence(0, entryPage.totalPages - 1)}"
-                th:classappend="${i == currentPage} ? 'active'">
-                <a class="page-link"
-                th:href="@{/phonebook(page=${i},size=${pageSize},keyword=${keyword})}" th:text="${i + 1}"></a>
+            
+            <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, entryPage.totalPages - 1)}"
+                th:classappend="${pageNum == currentPage} ? 'active'">
+                <a class="page-link" th:href="@{/phonebook(page=${pageNum}, size=${pageSize}, keyword=${keyword})}" th:text="${pageNum + 1}"></a>
             </li>
-            <li class="page-item" th:classappend="${entryPage.last} ? 'disabled'">
-                <a class="page-link"
-                    th:href="@{/phonebook(page=${currentPage + 1},size=${pageSize},keyword=${keyword})}">Next</a>
+            
+            <li class="page-item" th:classappend="${currentPage == entryPage.totalPages - 1} ? 'disabled'">
+                <a class="page-link" th:href="@{/phonebook(page=${currentPage + 1}, size=${pageSize}, keyword=${keyword})}">Next</a>
             </li>
         </ul>
     </nav>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function validateSearchForm() {
+    const keyword = document.getElementById('searchKeyword').value.trim();
+    
+    // Check for empty keyword
+    if (keyword === '') {
+        return true; // Allow empty searches
+    }
+    
+    // Check for valid characters
+    const validPattern = /^[a-zA-Z0-9\s\-']*$/;
+    if (!validPattern.test(keyword)) {
+        alert('Search keyword contains invalid characters. Only letters, numbers, spaces, hyphens, and apostrophes are allowed.');
+        return false;
+    }
+    
+    // Check for dangerous content
+    const dangerousPatterns = [
+        /<script/i, /javascript:/i, /union/i, /select/i, /drop/i, 
+        /delete/i, /insert/i, /update/i, /\.\.\//, /\.\.\\/
+    ];
+    
+    for (const pattern of dangerousPatterns) {
+        if (pattern.test(keyword)) {
+            alert('Search keyword contains potentially dangerous content.');
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+// Real-time validation for search input
+document.getElementById('searchKeyword').addEventListener('input', function() {
+    const keyword = this.value;
+    const isValid = /^[a-zA-Z0-9\s\-']*$/.test(keyword);
+    
+    this.classList.toggle('is-invalid', !isValid && keyword !== '');
+    this.classList.toggle('is-valid', isValid && keyword !== '');
+    
+    // Remove validation classes when input is empty
+    if (keyword === '') {
+        this.classList.remove('is-invalid', 'is-valid');
+    }
+});
+</script>
 </body>
 </html>
