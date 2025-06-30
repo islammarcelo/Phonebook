@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.core.env.Environment;
 
 @Controller
 @RequestMapping("/phonebook")
@@ -25,6 +26,9 @@ public class PhonebookWebController {
 
     @Autowired
     private InputSanitizer sanitizer;
+
+    @Autowired
+    private Environment env;
 
     @GetMapping
     public String listEntries(
@@ -59,6 +63,11 @@ public class PhonebookWebController {
             model.addAttribute("pageSize", sanitizedSize);
             model.addAttribute("keyword", sanitizedKeyword);
 
+            // Add active profile to the model
+            String[] profiles = env.getActiveProfiles();
+            String activeProfile = profiles.length > 0 ? profiles[0] : "default";
+            model.addAttribute("activeProfile", activeProfile);
+
         } catch (IllegalArgumentException e) {
             // Handle sanitization errors gracefully
             model.addAttribute("error", "Invalid search input: " + e.getMessage());
@@ -69,6 +78,10 @@ public class PhonebookWebController {
             model.addAttribute("currentPage", 0);
             model.addAttribute("pageSize", 5);
             model.addAttribute("keyword", keyword); // Keep original keyword for display
+            // Add active profile to the model in error case too
+            String[] profiles = env.getActiveProfiles();
+            String activeProfile = profiles.length > 0 ? profiles[0] : "default";
+            model.addAttribute("activeProfile", activeProfile);
         }
 
         return "phonebook_list";

@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.3'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'com.heroku.sdk.heroku-gradle' version '3.0.0'
 }
 
 group = 'com.example'
@@ -39,4 +40,14 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+// Heroku configuration
+heroku {
+	appName = project.hasProperty('herokuAppName') ? project.herokuAppName : 'phonebook-app'
+	buildpacks = ['heroku/gradle', 'heroku/java']
+	includes = ['build/libs/*.jar']
+	processTypes = [
+		web: 'java -Dserver.port=$PORT -Dspring.profiles.active=$SPRING_PROFILES_ACTIVE -jar build/libs/*.jar'
+	]
 }
