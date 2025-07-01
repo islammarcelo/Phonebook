@@ -6,7 +6,7 @@ echo "🚀 Deploying to Heroku Staging Environment..."
 # Set the app name for staging
 export HEROKU_APP_NAME="islam-app-stage"
 
-# Build the application (skip tests to avoid database issues)
+# Build the application
 echo "📦 Building application..."
 ./gradlew clean build -x test
 

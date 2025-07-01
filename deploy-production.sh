@@ -6,7 +6,7 @@ echo "🚀 Deploying to Heroku Production Environment..."
 # Set the app name for production
 export HEROKU_APP_NAME="islam-app-prod"
 
-# Build the application (skip tests to avoid database issues)
+# Build the application
 echo "📦 Building application..."
 ./gradlew clean build -x test
 
