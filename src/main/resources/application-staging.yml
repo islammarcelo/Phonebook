@@ -5,7 +5,7 @@ spring:
     password: ${DB_PASSWORD}
   liquibase:
     change-log: classpath:db/changelog/changelog-default.sql
-    enabled: true
+    enabled: false
   jpa:
     show-sql: false
     hibernate:
@@ -14,7 +14,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   elasticsearch:
-    uris: ${ELASTICSEARCH_URL}
+    uris: ${BONSAI_URL}
 
 server:
   port: ${PORT:8080}

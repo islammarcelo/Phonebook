@@ -12,7 +12,7 @@ echo "📦 Building application..."
 
 # Deploy to Heroku using standard git method (from develop branch)
 echo "🌐 Deploying to Heroku from develop branch..."
-git push https://git.heroku.com/$HEROKU_APP_NAME.git develop:main
+git push https://git.heroku.com/$HEROKU_APP_NAME.git develop
 
 # Set environment variables for staging
 echo "⚙️ Setting environment variables..."
