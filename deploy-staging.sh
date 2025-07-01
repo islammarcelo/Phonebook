@@ -10,9 +10,9 @@ export HEROKU_APP_NAME="islam-app-stage"
 echo "📦 Building application..."
 ./gradlew clean build -x test
 
-# Deploy to Heroku using standard git method (from develop branch)
+# Deploy to Heroku using standard git method (from main branch)
 echo "🌐 Deploying to Heroku from develop branch..."
-git push https://git.heroku.com/$HEROKU_APP_NAME.git develop
+git push https://git.heroku.com/$HEROKU_APP_NAME.git main
 
 # Set environment variables for staging
 echo "⚙️ Setting environment variables..."
