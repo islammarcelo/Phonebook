@@ -128,10 +128,10 @@ heroku addons:create bonsai:starter --app islam-app-prod
 
 ```bash
 # Staging
-heroku run ./gradlew liquibaseUpdate --app islam-app-stage
+# heroku run ./gradlew liquibaseUpdate --app islam-app-stage
 
-# Production
-heroku run ./gradlew liquibaseUpdate --app islam-app-prod
+# # Production
+# heroku run ./gradlew liquibaseUpdate --app islam-app-prod
 ```
 
 ## Environment Variables
