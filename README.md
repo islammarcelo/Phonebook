@@ -46,8 +46,8 @@ See [HEROKU_DEPLOYMENT.md](HEROKU_DEPLOYMENT.md) for detailed deployment instruc
 
 ## Environment URLs
 
-- **Staging**: https://phonebook-staging.herokuapp.com
-- **Production**: https://phonebook-production.herokuapp.com
+- **Staging**: https://islam-app-stage.herokuapp.com
+- **Production**: https://islam-app-prod.herokuapp.com
 
 ## Security Features
 
@@ -79,7 +79,3 @@ See [HEROKU_DEPLOYMENT.md](HEROKU_DEPLOYMENT.md) for detailed deployment instruc
 3. Make your changes
 4. Add tests
 5. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License.

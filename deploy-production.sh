@@ -4,31 +4,20 @@
 echo "🚀 Deploying to Heroku Production Environment..."
 
 # Set the app name for production
-export HEROKU_APP_NAME="phonebook-production"
+export HEROKU_APP_NAME="islam-app-prod"
 
 # Build the application
 echo "📦 Building application..."
 ./gradlew clean build -x test
 
-# Deploy to Heroku
-echo "🌐 Deploying to Heroku..."
-./gradlew herokuDeploy -PherokuAppName=$HEROKU_APP_NAME
+# Deploy to Heroku using standard git method (from main branch)
+echo "🌐 Deploying to Heroku from main branch..."
+git push https://git.heroku.com/$HEROKU_APP_NAME.git main
 
 # Set environment variables for production
 echo "⚙️ Setting environment variables..."
 heroku config:set SPRING_PROFILES_ACTIVE=production --app $HEROKU_APP_NAME
 
-# Add PostgreSQL addon if not exists
-echo "🗄️ Setting up PostgreSQL..."
-heroku addons:create heroku-postgresql:standard-0 --app $HEROKU_APP_NAME
-
-# Add Elasticsearch addon if not exists
-echo "🔍 Setting up Elasticsearch..."
-heroku addons:create bonsai:starter --app $HEROKU_APP_NAME
-
-# Run database migrations
-echo "🔄 Running database migrations..."
-heroku run ./gradlew liquibaseUpdate --app $HEROKU_APP_NAME
-
 echo "✅ Production deployment completed!"
-echo "🌐 Production URL: https://$HEROKU_APP_NAME.herokuapp.com" 
+echo "🌐 Production URL: https://$HEROKU_APP_NAME.herokuapp.com"
+echo "📝 Note: Database migrations will run automatically when the app starts" 

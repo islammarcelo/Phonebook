@@ -41,13 +41,3 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
-
-// Heroku configuration
-heroku {
-	appName = project.hasProperty('herokuAppName') ? project.herokuAppName : 'phonebook-app'
-	buildpacks = ['heroku/gradle', 'heroku/java']
-	includes = ['build/libs/*.jar']
-	processTypes = [
-		web: 'java -Dserver.port=$PORT -Dspring.profiles.active=$SPRING_PROFILES_ACTIVE -jar build/libs/*.jar'
-	]
-}

@@ -39,8 +39,8 @@ heroku --version
 
 The application is configured for two environments:
 
-- **Staging**: `phonebook-staging`
-- **Production**: `phonebook-production`
+- **Staging**: `islam-app-stage`
+- **Production**: `islam-app-prod`
 
 ### Configuration Files
 
@@ -71,48 +71,48 @@ The application is configured for two environments:
 
 ```bash
 # Create staging app
-heroku create phonebook-staging
+heroku create islam-app-stage
 
 # Create production app
-heroku create phonebook-production
+heroku create islam-app-prod
 ```
 
 #### 2. Set Buildpacks
 
 ```bash
 # For both apps
-heroku buildpacks:set heroku/gradle --app phonebook-staging
-heroku buildpacks:set heroku/gradle --app phonebook-production
+heroku buildpacks:set heroku/gradle --app islam-app-stage
+heroku buildpacks:set heroku/gradle --app islam-app-prod
 ```
 
 #### 3. Configure Environment Variables
 
 ```bash
 # Staging
-heroku config:set SPRING_PROFILES_ACTIVE=staging --app phonebook-staging
+heroku config:set SPRING_PROFILES_ACTIVE=staging --app islam-app-stage
 
 # Production
-heroku config:set SPRING_PROFILES_ACTIVE=production --app phonebook-production
+heroku config:set SPRING_PROFILES_ACTIVE=production --app islam-app-prod
 ```
 
 #### 4. Add Database Addons
 
 ```bash
 # Staging - PostgreSQL Mini
-heroku addons:create heroku-postgresql:mini --app phonebook-staging
+heroku addons:create heroku-postgresql:mini --app islam-app-stage
 
 # Production - PostgreSQL Standard
-heroku addons:create heroku-postgresql:standard-0 --app phonebook-production
+heroku addons:create heroku-postgresql:standard-0 --app islam-app-prod
 ```
 
 #### 5. Add Elasticsearch Addons
 
 ```bash
 # Staging - Bonsai Sandbox
-heroku addons:create bonsai:sandbox --app phonebook-staging
+heroku addons:create bonsai:sandbox --app islam-app-stage
 
 # Production - Bonsai Starter
-heroku addons:create bonsai:starter --app phonebook-production
+heroku addons:create bonsai:starter --app islam-app-prod
 ```
 
 #### 6. Deploy Application
@@ -120,18 +120,18 @@ heroku addons:create bonsai:starter --app phonebook-production
 ```bash
 # Build and deploy
 ./gradlew clean build -x test
-./gradlew herokuDeploy -PherokuAppName=phonebook-staging
-./gradlew herokuDeploy -PherokuAppName=phonebook-production
+./gradlew herokuDeploy -PherokuAppName=islam-app-stage
+./gradlew herokuDeploy -PherokuAppName=islam-app-prod
 ```
 
 #### 7. Run Database Migrations
 
 ```bash
 # Staging
-heroku run ./gradlew liquibaseUpdate --app phonebook-staging
+heroku run ./gradlew liquibaseUpdate --app islam-app-stage
 
 # Production
-heroku run ./gradlew liquibaseUpdate --app phonebook-production
+heroku run ./gradlew liquibaseUpdate --app islam-app-prod
 ```
 
 ## Environment Variables
@@ -151,12 +151,12 @@ The application expects these environment variables to be set:
 
 ```bash
 # Staging
-heroku config:set DB_USERNAME=your_username --app phonebook-staging
-heroku config:set DB_PASSWORD=your_password --app phonebook-staging
+heroku config:set DB_USERNAME=your_username --app islam-app-stage
+heroku config:set DB_PASSWORD=your_password --app islam-app-stage
 
 # Production
-heroku config:set DB_USERNAME=your_username --app phonebook-production
-heroku config:set DB_PASSWORD=your_password --app phonebook-production
+heroku config:set DB_USERNAME=your_username --app islam-app-prod
+heroku config:set DB_PASSWORD=your_password --app islam-app-prod
 ```
 
 ## Monitoring and Logs
@@ -165,28 +165,28 @@ heroku config:set DB_PASSWORD=your_password --app phonebook-production
 
 ```bash
 # Staging
-heroku logs --tail --app phonebook-staging
+heroku logs --tail --app islam-app-stage
 
 # Production
-heroku logs --tail --app phonebook-production
+heroku logs --tail --app islam-app-prod
 ```
 
 ### Check Application Status
 
 ```bash
 # Staging
-heroku ps --app phonebook-staging
+heroku ps --app islam-app-stage
 
 # Production
-heroku ps --app phonebook-production
+heroku ps --app islam-app-prod
 ```
 
 ### Monitor Addons
 
 ```bash
 # View all addons
-heroku addons --app phonebook-staging
-heroku addons --app phonebook-production
+heroku addons --app islam-app-stage
+heroku addons --app islam-app-prod
 ```
 
 ## Database Management
@@ -195,20 +195,20 @@ heroku addons --app phonebook-production
 
 ```bash
 # Staging
-heroku pg:psql --app phonebook-staging
+heroku pg:psql --app islam-app-stage
 
 # Production
-heroku pg:psql --app phonebook-production
+heroku pg:psql --app islam-app-prod
 ```
 
 ### Database Backups
 
 ```bash
 # Create backup
-heroku pg:backups:capture --app phonebook-production
+heroku pg:backups:capture --app islam-app-prod
 
 # Download backup
-heroku pg:backups:download --app phonebook-production
+heroku pg:backups:download --app islam-app-prod
 ```
 
 ## Troubleshooting
@@ -219,28 +219,28 @@ heroku pg:backups:download --app phonebook-production
 
    ```bash
    # Check build logs
-   heroku builds --app phonebook-staging
+   heroku builds --app islam-app-stage
    ```
 
 2. **Database Connection Issues**
 
    ```bash
    # Check database status
-   heroku pg:info --app phonebook-staging
+   heroku pg:info --app islam-app-stage
    ```
 
 3. **Memory Issues**
    ```bash
    # Check dyno memory usage
-   heroku logs --app phonebook-staging | grep "Memory"
+   heroku logs --app islam-app-stage | grep "Memory"
    ```
 
 ### Scaling
 
 ```bash
 # Scale web dynos
-heroku ps:scale web=1 --app phonebook-staging
-heroku ps:scale web=2 --app phonebook-production
+heroku ps:scale web=1 --app islam-app-stage
+heroku ps:scale web=2 --app islam-app-prod
 ```
 
 ## Security Considerations

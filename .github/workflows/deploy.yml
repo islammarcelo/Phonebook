@@ -53,11 +53,11 @@ jobs:
         uses: akhileshns/heroku-deploy@v3.12.14
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: "phonebook-staging"
+          heroku_app_name: "islam-app-stage"
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
           appdir: "."
           buildpack: "heroku/gradle"
-          healthcheck: "https://phonebook-staging.herokuapp.com/actuator/health"
+          healthcheck: "https://islam-app-stage.herokuapp.com/actuator/health"
           checkstring: "UP"
           delay: 10
           procfile: "Procfile"
@@ -81,11 +81,11 @@ jobs:
         uses: akhileshns/heroku-deploy@v3.12.14
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: "phonebook-production"
+          heroku_app_name: "islam-app-prod"
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
           appdir: "."
           buildpack: "heroku/gradle"
-          healthcheck: "https://phonebook-production.herokuapp.com/actuator/health"
+          healthcheck: "https://islam-app-prod.herokuapp.com/actuator/health"
           checkstring: "UP"
           delay: 10
           procfile: "Procfile"
