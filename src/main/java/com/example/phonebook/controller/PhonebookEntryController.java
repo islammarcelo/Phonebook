@@ -4,7 +4,7 @@ import com.example.phonebook.entity.PhonebookEntry;
 import com.example.phonebook.service.PhonebookEntryService;
 import com.example.phonebook.util.InputSanitizer;
 
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
