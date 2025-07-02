@@ -14,7 +14,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   elasticsearch:
-    uris: ${BONSAI_URL}
+    uris: ${ELASTICSEARCH_URI}
 
 server:
   port: ${PORT:8080}
