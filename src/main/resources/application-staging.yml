@@ -5,7 +5,7 @@ spring:
     password: ${JDBC_DATABASE_PASSWORD}
   liquibase:
     change-log: classpath:db/changelog/changelog-default.sql
-    enabled: true
+    enabled: false
   jpa:
     show-sql: false
     hibernate:
