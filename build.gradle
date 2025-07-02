@@ -26,8 +26,8 @@ repositories {
 }
 
 ext {
-    set('elasticsearch.version', '7.17.10')
-    set('springDataElasticsearch.version', '4.4.7')
+    elasticsearchVersion = '7.17.10'
+    springDataElasticsearchVersion = '4.4.7'
 }
 
 
@@ -43,8 +43,8 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation "org.springframework.boot:spring-boot-starter-data-elasticsearch"
-    implementation "org.springframework.data:spring-data-elasticsearch:${springDataElasticsearch.version}"
-    implementation "org.elasticsearch.client:elasticsearch-rest-high-level-client:${elasticsearch.version}"
+ 	implementation "org.springframework.data:spring-data-elasticsearch:${springDataElasticsearchVersion}"
+    implementation "org.elasticsearch.client:elasticsearch-rest-high-level-client:${elasticsearchVersion}"
 }
 
 tasks.named('test') {
