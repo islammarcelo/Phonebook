@@ -19,5 +19,5 @@ echo "⚙️ Setting environment variables..."
 heroku config:set SPRING_PROFILES_ACTIVE=production --app $HEROKU_APP_NAME
 
 echo "✅ Production deployment completed!"
-echo "🌐 Production URL: https://$HEROKU_APP_NAME.herokuapp.com"
+echo "🌐 Production URL: https://$HEROKU_APP_NAME-7a553c2cbe53.herokuapp.com/phonebook"
 echo "📝 Note: Database migrations will run automatically when the app starts" 
