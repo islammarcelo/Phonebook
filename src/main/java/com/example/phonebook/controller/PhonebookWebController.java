@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @Controller
 @RequestMapping("/phonebook")
@@ -80,6 +81,7 @@ public class PhonebookWebController {
         return "phonebook_list";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/new")
     public String showAddForm(Model model) {
         model.addAttribute("entry", new PhonebookEntry());
@@ -87,6 +89,7 @@ public class PhonebookWebController {
         return "phonebook_form";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/save")
     public String saveEntry(@ModelAttribute PhonebookEntry entry, RedirectAttributes redirectAttributes) {
         try {
