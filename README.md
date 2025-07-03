@@ -9,6 +9,20 @@ A Spring Boot application for managing phonebook entries with Elasticsearch inte
 - Input sanitization and validation
 - Responsive Bootstrap UI
 - Environment-specific configurations
+- **Admin-only add/edit:** Only users with the ADMIN role can add or edit phonebook entries (see Security section below)
+
+## Security (Admin-only Add/Edit)
+
+This application uses Spring Security to restrict adding and editing phonebook entries to admin users only.
+
+- The "Add New" button and the /phonebook/new and /phonebook/save endpoints are only accessible to users with the ADMIN role.
+- By default, an in-memory admin user is provided:
+  - **Username:** `admin`
+  - **Password:** `admin123`
+- All other users (or unauthenticated users) can view the phonebook but cannot add or edit entries.
+- You can customize users and roles in `SecurityConfig.java`.
+
+When accessing a restricted page, you will be prompted to log in. You can use the default admin credentials above.
 
 ## Dynamic Titles
 
