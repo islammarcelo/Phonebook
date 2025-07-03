@@ -30,14 +30,3 @@ heroku config:set SPRING_PROFILES_ACTIVE=staging --app islam-app-stage
 # Set environment variables for production
 echo "⚙️ Configuring production environment..."
 heroku config:set SPRING_PROFILES_ACTIVE=production --app islam-app-prod
-
-# # Add PostgreSQL addons
-# echo "🗄️ Adding PostgreSQL addons..."
-# heroku addons:create heroku-postgresql:mini --app islam-app-stage
-# heroku addons:create heroku-postgresql:standard-0 --app islam-app-prod
-
-
-# Add Elasticsearch addons
-echo "🔍 Adding Elasticsearch addons..."
-heroku addons:create bonsai:sandbox --app islam-app-stage
-heroku addons:create bonsai:sandbox --app islam-app-prod
