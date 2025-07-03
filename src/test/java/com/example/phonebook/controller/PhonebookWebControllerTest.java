@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -19,6 +20,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(PhonebookWebController.class)
+@TestPropertySource(properties = {
+                "app.title=Phonebook - Test"
+})
 class PhonebookWebControllerTest {
 
         @Autowired
@@ -80,5 +84,16 @@ class PhonebookWebControllerTest {
                                 .andExpect(model().attributeExists("error"))
                                 .andExpect(model().attribute("error",
                                                 "Invalid search input: Search keyword contains potentially dangerous content"));
+        }
+
+        @Test
+        void testListEntries_IncludesAppTitle() throws Exception {
+                when(service.getAllEntries(any(PageRequest.class)))
+                                .thenReturn(new PageImpl<>(Arrays.asList()));
+
+                mockMvc.perform(get("/phonebook"))
+                                .andExpect(status().isOk())
+                                .andExpect(view().name("phonebook_list"))
+                                .andExpect(model().attribute("appTitle", "Phonebook - Test"));
         }
 }

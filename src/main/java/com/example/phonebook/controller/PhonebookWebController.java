@@ -6,6 +6,7 @@ import com.example.phonebook.entity.PhonebookEntry;
 import com.example.phonebook.service.PhonebookEntryService;
 import com.example.phonebook.util.InputSanitizer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,9 @@ public class PhonebookWebController {
 
     @Autowired
     private InputSanitizer sanitizer;
+
+    @Value("${app.title:Phonebook}")
+    private String appTitle;
 
     @GetMapping
     public String listEntries(
@@ -58,6 +62,7 @@ public class PhonebookWebController {
             model.addAttribute("currentPage", sanitizedPage);
             model.addAttribute("pageSize", sanitizedSize);
             model.addAttribute("keyword", sanitizedKeyword);
+            model.addAttribute("appTitle", appTitle);
 
         } catch (IllegalArgumentException e) {
             // Handle sanitization errors gracefully
@@ -69,6 +74,7 @@ public class PhonebookWebController {
             model.addAttribute("currentPage", 0);
             model.addAttribute("pageSize", 5);
             model.addAttribute("keyword", keyword); // Keep original keyword for display
+            model.addAttribute("appTitle", appTitle);
         }
 
         return "phonebook_list";
@@ -77,6 +83,7 @@ public class PhonebookWebController {
     @GetMapping("/new")
     public String showAddForm(Model model) {
         model.addAttribute("entry", new PhonebookEntry());
+        model.addAttribute("appTitle", appTitle);
         return "phonebook_form";
     }
 
@@ -112,6 +119,7 @@ public class PhonebookWebController {
 
             PhonebookEntry entry = service.getEntryById(sanitizedId).orElseThrow();
             model.addAttribute("entry", entry);
+            model.addAttribute("appTitle", appTitle);
             return "phonebook_form";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Entry not found");

@@ -15,3 +15,7 @@ spring:
 
   elasticsearch:
     uris: http://localhost:9200
+
+# Application custom properties
+app:
+  title: "Phonebook - Development"
