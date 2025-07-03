@@ -19,5 +19,5 @@ echo "⚙️ Setting environment variables..."
 heroku config:set SPRING_PROFILES_ACTIVE=staging --app $HEROKU_APP_NAME
 
 echo "✅ Staging deployment completed!"
-echo "🌐 Staging URL:https://islam-app-stage-76b1761c7433.herokuapp.com/phonebook"
+echo "🌐 Staging URL:https://$HEROKU_APP_NAME-76b1761c7433.herokuapp.com/phonebook"
 echo "📝 Note: Database migrations will run automatically when the app starts" 
